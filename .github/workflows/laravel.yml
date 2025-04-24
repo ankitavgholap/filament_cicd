@@ -1,0 +1,45 @@
+# .github/workflows/laravel.yml
+
+name: Laravel CI/CD
+
+on:
+  push:
+    branches:
+      - main # or 'master' or any branch you want to track
+  pull_request:
+
+jobs:
+  laravel-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v3
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2 # or your version
+          extensions: mbstring, bcmath, xml, ctype, fileinfo, curl, tokenizer, json, mysql
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Copy .env
+        run: cp .env.example .env
+
+      - name: Generate app key
+        run: php artisan key:generate
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Set permissions
+        run: chmod -R 777 storage bootstrap/cache
+
+      - name: Run Tests
+        run: php artisan test
