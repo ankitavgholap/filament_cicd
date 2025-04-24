@@ -5,7 +5,7 @@ name: Laravel CI/CD
 on:
   push:
     branches:
-      - main # or 'master' or any branch you want to track
+      - master # or 'master' or any branch you want to track
   pull_request:
 
 jobs:
