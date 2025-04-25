@@ -12,6 +12,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Navigation\NavigationItem;
+
 
 class PostResource extends Resource
 {
@@ -19,6 +21,19 @@ class PostResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        // You can use: 'primary', 'secondary', 'success', 'warning', 'danger', or 'gray'
+        return 'primary';
+    }
+
+    // You can also make the color dynamic, for example:
+   
     public static function form(Form $form): Form
     {
         return $form->schema([
@@ -27,6 +42,7 @@ class PostResource extends Resource
                 ->maxLength(255),
             Forms\Components\Textarea::make('content')
                 ->required(),
+           
         ]);
     }
 

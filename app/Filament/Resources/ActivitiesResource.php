@@ -12,12 +12,27 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Navigation\NavigationItem;
+
 
 class ActivitiesResource extends Resource
 {
     protected static ?string $model = Activities::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        // You can use: 'primary', 'secondary', 'success', 'warning', 'danger', or 'gray'
+        return 'success';
+    }
+
+   
 
     public static function form(Form $form): Form
     {

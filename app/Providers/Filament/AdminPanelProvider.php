@@ -17,6 +17,11 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use App\Models\User;
+use App\Models\Post;
+use App\Models\Activity;
+use Filament\Navigation\NavigationItem;
+
 
 class AdminPanelProvider extends PanelProvider
 {
