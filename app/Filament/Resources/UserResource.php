@@ -30,6 +30,17 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('email')
                 ->required()
                 ->maxLength(255),
+                Forms\Components\Select::make('role')
+                ->label('Role')
+                ->options(Role::all()->pluck('name', 'name'))
+                ->default(fn ($record) => $record?->roles?->first()?->name)
+                ->required()
+                ->reactive()
+                ->afterStateUpdated(function ($state, $set, $get, $record) {
+                    if ($record) {
+                        $record->syncRoles([$state]);
+                    }
+                }),
             ]);
     }
 
@@ -40,6 +51,16 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('name')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('email')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('created_at')->dateTime(),
+                Tables\Columns\TextColumn::make('roles.name')
+                ->label('Role')
+                ->sortable()
+                ->searchable()
+                ->badge()
+                ->colors([
+                    'primary' => 'admin',
+                    'success' => 'user',
+                ])
+                ->limit(1), // Shows only one role (adjust if needed)
             ])
             ->filters([
                 //
@@ -70,11 +91,11 @@ class UserResource extends Resource
         ];
     }
 
-    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
-    {
-        return parent::getEloquentQuery()
-            ->where('name', '!=', 'Admin');
-    }
+    // public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    // {
+    //     return parent::getEloquentQuery()
+    //         ->where('name', '!=', 'Admin');
+    // }
 
     public static function getNavigationBadge(): ?string
     {
@@ -85,5 +106,13 @@ class UserResource extends Resource
     {
         // You can use: 'primary', 'secondary', 'success', 'warning', 'danger', or 'gray'
         return 'warning';
+    }
+
+    public static function afterSave(Form $form, Model $record): void
+    {
+        $role = $form->getState()['role'];
+        if ($role) {
+            $record->syncRoles([$role]);
+        }
     }
 }

@@ -9,11 +9,12 @@
         "bezhansalleh/filament-shield": "^3.3",
         "filament/filament": "3.3",
         "guzzlehttp/guzzle": "^7.2",
+        "illuminate/filesystem": "*",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "livewire/livewire": "^3.6",
-        "spatie/laravel-permission": "^6.17"
+        "spatie/laravel-permission": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
